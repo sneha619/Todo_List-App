@@ -114,6 +114,10 @@ const TodoList = () => {
     setToggleSubmit(false);
   };
 
+  const handleRemoveAll = () => {
+    setTodos([])
+  };
+
   return (
     <div className="todo-wrapper">
       <h1 className="heading">ToDo List</h1>
@@ -165,6 +169,9 @@ const TodoList = () => {
           </div>
         ))}
       </div>
+      {todos.length > 1 && (<button title="Clear all" onClick={handleRemoveAll} className="RemoveAll-icon">
+          <span>Remove all</span>
+        </button>)}
     </div>
   );
 };
