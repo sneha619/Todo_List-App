@@ -8,7 +8,7 @@ const { createToken, createRefreshToken } = require("../utils/tokenutils")
 const router = express.Router()
 
 // Signup Route
-router.post("/signup", async (req, res) => {
+router.post("auth/signup", async (req, res) => {
   try {
     const { email, password } = req.body
 
@@ -53,7 +53,7 @@ router.post("/signup", async (req, res) => {
 })
 
 // Login Route
-router.post("/login", async (req, res) => {
+router.post("auth/login", async (req, res) => {
   try {
     const { email, password } = req.body
 
