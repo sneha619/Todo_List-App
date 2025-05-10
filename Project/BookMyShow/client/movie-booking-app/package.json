@@ -1,0 +1,28 @@
+{
+  "name": "movie-booking-app",
+  "version": "1.0.0",
+  "description": "A dynamic web application for booking movie tickets.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9",
+    "stripe": "^8.0.0",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "keywords": [
+    "movie",
+    "booking",
+    "tickets",
+    "web",
+    "application"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
