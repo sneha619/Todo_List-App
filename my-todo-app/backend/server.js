@@ -12,15 +12,26 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 const app = express();
+// app.use(cors({
+//   origin: '*', 
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With'],
+//   exposedHeaders: ['Content-Length', 'X-Requested-With'],
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204
+// }));
+
 app.use(cors({
-  origin: '*', 
+
+  origin: 'http://localhost:3000',
+  
   credentials: true,
+  
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With'],
-  exposedHeaders: ['Content-Length', 'X-Requested-With'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  
 }));
+
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
