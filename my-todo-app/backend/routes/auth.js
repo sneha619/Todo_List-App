@@ -4,9 +4,15 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { createToken, createRefreshToken } = require("../utils/tokenutils")
 
+
 // Create router
 const router = express.Router()
 
+router.get("/", (req, res) => {
+
+  res.status(200).json({ message: "Backend is working!" });
+  
+});
 // Signup Route
 router.post("auth/signup", async (req, res) => {
   try {
