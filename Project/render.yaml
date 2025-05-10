@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: todo-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        value: mongodb+srv://sneha1995sarkar25:O8QuvtugTTkhh8CE@cluster0.tomu2um.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+  - type: web
+    name: todo-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://todo-backend.onrender.com
