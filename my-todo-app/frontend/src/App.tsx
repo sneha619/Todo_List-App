@@ -14,13 +14,18 @@ const ProtectedRoute = ({ children }: { children }) => {
 
 const App = () => {
   const [todos, setTodos] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const fetchTodos = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+      
       const response = await axios.get("http://localhost:5000/todos", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${token}`,
         },
+        withCredentials: true
       });
       setTodos(response.data);
     } catch (error) {
@@ -28,10 +33,12 @@ const App = () => {
     }
   };
 
+  // Check authentication status and fetch todos when it changes
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
+    setIsAuthenticated(!!token);
     if (token) fetchTodos();
-  }, []);
+  }, [isAuthenticated]);
 
   // Add event listener for page refresh/load to ensure todos are fetched
   useEffect(() => {
@@ -44,12 +51,18 @@ const App = () => {
     };
   }, []);
 
+  // Function to handle successful login
+  const handleLoginSuccess = (token) => {
+    localStorage.setItem("accessToken", token);
+    setIsAuthenticated(true);
+  };
+
   return (
     <ThemeProvider>
       <Router>
         <ThemeToggle />
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/signup" element={<Signup />} />
 
           <Route

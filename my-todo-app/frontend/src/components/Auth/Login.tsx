@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login: React.FC = () => {
+interface LoginProps {
+  onLoginSuccess?: (token: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -14,18 +18,14 @@ const Login: React.FC = () => {
         email,
         password,
       }, { withCredentials: true });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      // Fetch todos immediately after successful login
-      try {
-        await axios.get("http://localhost:5000/todos", {
-          headers: {
-            Authorization: `Bearer ${response.data.accessToken}`,
-          },
-          withCredentials: true
-        });
-      } catch (error) {
-        console.error("Error fetching todos after login:", error);
+      
+      // Use the onLoginSuccess callback if provided
+      if (onLoginSuccess) {
+        onLoginSuccess(response.data.accessToken);
+      } else {
+        localStorage.setItem("accessToken", response.data.accessToken);
       }
+      
       navigate("/todos");
     } catch (error) {
       console.error("Login error:", error);

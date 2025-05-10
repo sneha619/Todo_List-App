@@ -2,7 +2,7 @@ const express = require("express")
 const User = require("../models/User")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const { createToken, createRefreshToken } = require("../utils/tokenUtils")
+const { createToken, createRefreshToken } = require("../utils/tokenutils")
 
 // Create router
 const router = express.Router()
