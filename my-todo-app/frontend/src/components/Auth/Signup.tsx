@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  // Add API_URL logic similar to Login.tsx
+  const API_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://todo-backend-8occ.onrender.com' 
+    : 'http://localhost:5000';
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +23,7 @@ const Signup: React.FC = () => {
       return;
     }
     try {
-      await axios.post("https://todo-backend-8occ.onrender.com/auth/signup", { email, password });
+      await axios.post(`${API_URL}/auth/signup`, { email, password });
       alert("Signup successful!");
       navigate("/");
     } catch (error) {
@@ -43,27 +51,45 @@ const Signup: React.FC = () => {
           </div>
           <div>
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-1 transition-colors duration-200" htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:ring focus:ring-blue-400 transition-colors duration-200"
-              placeholder="Create a password"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:ring focus:ring-blue-400 transition-colors duration-200"
+                placeholder="Create a password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200"
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-gray-700 dark:text-gray-300 text-sm font-semibold mb-1 transition-colors duration-200" htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:ring focus:ring-blue-400 transition-colors duration-200"
-              placeholder="Confirm your password"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:ring focus:ring-blue-400 transition-colors duration-200"
+                placeholder="Confirm your password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200"
+              >
+                {showConfirmPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+            </div>
           </div>
           <div>
             <button
