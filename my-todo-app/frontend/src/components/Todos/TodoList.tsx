@@ -56,7 +56,7 @@ const updateTodo = async (id: string, updates: Partial<Todo>) => {
   try {
     console.log(`PUT /todos/${id} →`, updates);
     const response = await axios.put(
-      `http://localhost:5000/todos/${id}`,
+      `https://todo-backend-8occ.onrender.com/todos/${id}`,
       updates,
       {
         headers: {
@@ -118,7 +118,7 @@ const cancelEdit = () => {
       }
       
       const response = await axios.post(
-        "http://localhost:5000/todos",
+        "https://todo-backend-8occ.onrender.com/todos",
         { 
           title: newTodo.trim(),
           description: newDescription, 
@@ -149,7 +149,7 @@ const cancelEdit = () => {
   const deleteTodo = async (id: string): Promise<void> => {
     try {
       console.log(`Deleting todo with ID: ${id}`)
-      const response = await axios.delete(`http://localhost:5000/todos/${id}`, {
+      const response = await axios.delete(`https://todo-backend-8occ.onrender.com/todos/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -173,7 +173,7 @@ const cancelEdit = () => {
       const promises = selectedTodos.map((id) => {
         console.log(`PUT /todos/${id} → { status: "completed" }`);
         return axios.put(
-          `http://localhost:5000/todos/${id}`,
+          `https://todo-backend-8occ.onrender.com/todos/${id}`,
           { status: "completed" },
           {
             headers: {

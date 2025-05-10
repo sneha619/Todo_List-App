@@ -21,7 +21,7 @@ const App = () => {
       const token = localStorage.getItem("accessToken");
       if (!token) return;
       
-      const response = await axios.get("http://localhost:5000/todos", {
+      const response = await axios.get("https://todo-backend-8occ.onrender.com/todos", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

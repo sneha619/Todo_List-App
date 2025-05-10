@@ -1,6 +1,3 @@
-// Updated TodoItem component with toggleable description and due date reflected properly
-"use client";
-
 import React, { useState } from "react";
 import { Edit2, Trash2 } from "lucide-react";
 import axios from "axios";
@@ -31,7 +28,7 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/todos/${todo._id}`, {
+      await axios.delete(`https://todo-backend-8occ.onrender.com/${todo._id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -45,7 +42,7 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
   const handleEdit = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/todos/${todo._id}`,
+        `https://todo-backend-8occ.onrender.com/todos/${todo._id}`,
         {
           title: editedTitle,
           description: editedDescription,
@@ -68,7 +65,7 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
   const handleStatusChange = async (newStatus: string) => {
     try {
       await axios.put(
-        `http://localhost:5000/todos/${todo._id}`,
+        `https://todo-backend-8occ.onrender.com/todos/${todo._id}`,
         { status: newStatus },
         {
           headers: {

@@ -15,7 +15,7 @@ const Signup: React.FC = () => {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/auth/signup", { email, password });
+      await axios.post("https://todo-backend-8occ.onrender.com/auth/signup", { email, password });
       alert("Signup successful!");
       navigate("/");
     } catch (error) {
