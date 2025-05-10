@@ -32,10 +32,17 @@ app.use(cors({
   
 }));
 
+
+
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-app.use("/auth", authRoutes);
+app.get("/", (req, res) => {
+
+  res.status(200).json({ message: "Backend is working!" });
+  
+});
+app.use("/auth",authRoutes);
 app.use("/todos", todoRoutes);
 
 const PORT = process.env.PORT || 5000;
