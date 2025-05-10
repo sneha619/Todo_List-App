@@ -3,12 +3,13 @@ const User = require("../models/User")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { createToken, createRefreshToken } = require("../utils/tokenutils")
-
+// const auth = require("../middleware/auth");
 
 // Create router
 const router = express.Router()
+
 // Signup Route
-router.post("/signup", async (req, res) => {
+router.post("/signup",async (req, res) => {
   try {
     const { email, password } = req.body
 
@@ -82,7 +83,7 @@ router.post("/login", async (req, res) => {
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Changed from 'strict' to 'none' for cross-site cookies in production
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     })
 

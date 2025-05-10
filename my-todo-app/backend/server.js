@@ -1,50 +1,60 @@
-require("dotenv").config();
+require("dotenv").config(); // Load .env first
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth");
 const todoRoutes = require("./routes/todos");
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
-
 const app = express();
-// app.use(cors({
-//   origin: '*', 
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length', 'X-Requested-With'],
-//   exposedHeaders: ['Content-Length', 'X-Requested-With'],
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204
-// }));
 
-app.use(cors({
+// ✅ Define CORS options first
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://todo-frontend.onrender.com"
+];
 
-  origin: '*',
-  
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  
-}));
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
 
+// ✅ Apply middleware in order
+app.use(cors(corsOptions));
 
-
-app.use(helmet());
-app.use(express.json());
-app.use(cookieParser());
-app.get("/", (req, res) => {
-
-  res.status(200).json({ message: "Backend is working!" });
-  
+app.use((req, res, next) => {
+  console.log("Request Origin:", req.headers.origin);
+  next();
 });
-app.use("/auth",authRoutes);
+
+// Remove the extra app.options call since cors middleware already handles preflight
+app.use(cookieParser());
+app.use(express.json());
+
+// ✅ Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// ✅ Routes
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Backend is working!" });
+});
+
+app.use("/auth", authRoutes);
 app.use("/todos", todoRoutes);
 
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
