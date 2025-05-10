@@ -12,7 +12,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
-  "https://todo-frontend.onrender.com"
+  "https://todo-frontend-wgje.onrender.com"
 ];
 
 const corsOptions = {
