@@ -6,6 +6,7 @@ const TodoSchema = new mongoose.Schema({
   status: { type: String, default: "pending" },
   dueDate: { type: Date, required: false },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  order: { type: Number, required: true },
 });
 
 module.exports = mongoose.model("Todo", TodoSchema);

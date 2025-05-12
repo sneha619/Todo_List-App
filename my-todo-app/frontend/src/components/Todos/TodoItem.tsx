@@ -26,12 +26,17 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
   const [editedDueDate, setEditedDueDate] = useState(todo.dueDate || "");
   const [editedStatus, setEditedStatus] = useState(todo.status || "pending");
 
+  const API_URL = process.env.NODE_ENV === 'production' 
+    ? 'https://todo-backend-8occ.onrender.com' 
+    : 'http://localhost:5000';
+    
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://todo-backend-8occ.onrender.com/${todo._id}`, {
+      await axios.delete(`${API_URL}/todos/${todo._id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
+        withCredentials: true
       });
       fetchTodos();
     } catch (error) {
@@ -42,7 +47,7 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
   const handleEdit = async () => {
     try {
       await axios.put(
-        `https://todo-backend-8occ.onrender.com/todos/${todo._id}`,
+        `${API_URL}/todos/${todo._id}`,
         {
           title: editedTitle,
           description: editedDescription,
@@ -53,6 +58,7 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
+          withCredentials: true
         },
       );
       setIsEditing(false);
@@ -65,12 +71,13 @@ const TodoItem: React.FC<Props> = ({ todo, fetchTodos, isSelected, onToggleSelec
   const handleStatusChange = async (newStatus: string) => {
     try {
       await axios.put(
-        `https://todo-backend-8occ.onrender.com/todos/${todo._id}`,
+        `${API_URL}/todos/${todo._id}`,
         { status: newStatus },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
+          withCredentials: true
         },
       );
       fetchTodos();

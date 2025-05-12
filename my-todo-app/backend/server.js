@@ -24,7 +24,7 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
@@ -53,6 +53,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/todos", todoRoutes);
+
 
 // ✅ Start server
 const PORT = process.env.PORT || 5000;

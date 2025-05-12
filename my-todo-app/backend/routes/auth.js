@@ -79,15 +79,13 @@ router.post("/login", async (req, res) => {
     const accessToken = createToken(user._id)
     const refreshToken = createRefreshToken(user._id)
 
-    // Set refresh token as HTTP-only cookie
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Changed from 'strict' to 'none' for cross-site cookies in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     })
 
-    // Respond with access token
     res.json({
       accessToken,
       user: {
@@ -101,14 +99,11 @@ router.post("/login", async (req, res) => {
   }
 })
 
-// Logout Route
 router.post("/logout", async (req, res) => {
   try {
-    // Get the authorization header to revoke the token
     const authHeader = req.headers["authorization"]
     const token = authHeader && authHeader.split(" ")[1]
 
-    // If token exists and user is authenticated, revoke the token
     if (token && req.user) {
       const user = await User.findById(req.user.id)
       if (user) {
@@ -116,7 +111,6 @@ router.post("/logout", async (req, res) => {
       }
     }
 
-    // Clear refresh token cookie
     res.clearCookie("refresh_token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -130,36 +124,28 @@ router.post("/logout", async (req, res) => {
   }
 })
 
-// Refresh Token Route
 router.post("/refresh", async (req, res) => {
   try {
-    // Get refresh token from cookie
+
     const refreshToken = req.cookies.refresh_token
 
-    // Check if refresh token exists
     if (!refreshToken) {
       return res.status(401).json({ error: "No refresh token" })
     }
 
-    // Verify refresh token
     const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "your_refresh_secret_key"
     const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
 
-    // Find user
     const user = await User.findById(decoded.id)
     if (!user) {
       return res.status(401).json({ error: "User not found" })
     }
 
-    // Check if token is revoked
     if (user.isTokenRevoked(refreshToken)) {
       return res.status(401).json({ error: "Refresh token has been revoked" })
     }
-
-    // Generate new access token
     const newAccessToken = createToken(user._id)
 
-    // Respond with new access token
     res.json({ accessToken: newAccessToken })
   } catch (error) {
     // Handle different types of JWT errors
