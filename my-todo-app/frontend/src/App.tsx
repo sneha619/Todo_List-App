@@ -13,6 +13,12 @@ const API_URL = process.env.NODE_ENV === 'production'
   ? 'https://todo-backend-8occ.onrender.com' 
   : 'http://localhost:5000';
 
+// Set default axios auth header on app initialization
+const token = localStorage.getItem("accessToken");
+if (token) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -22,7 +28,6 @@ axios.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        
         const response = await axios.post(`${API_URL}/auth/refresh`, {}, {
           withCredentials: true
         });
@@ -80,24 +85,35 @@ const App = () => {
   };
 
  
+  // Check authentication status and refresh token on initial load
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsAuthenticated(!!token);
-    if (token) fetchTodos();
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('load', () => {
+    const checkAuthAndRefreshToken = async () => {
       const token = localStorage.getItem("accessToken");
-      if (token) fetchTodos();
-    });
-    return () => {
-      window.removeEventListener('load', () => {});
+      if (token) {
+        setIsAuthenticated(true);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        try {
+          // Try to refresh the token silently on page load
+          await axios.post(`${API_URL}/auth/refresh`, {}, {
+            withCredentials: true
+          });
+          await fetchTodos();
+        } catch (error) {
+          console.error("Silent token refresh failed:", error);
+          // Continue with the existing token if refresh fails
+          fetchTodos();
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
     };
+    
+    checkAuthAndRefreshToken();
   }, []);
 
   const handleLoginSuccess = (token) => {
     localStorage.setItem("accessToken", token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setIsAuthenticated(true);
   };
 

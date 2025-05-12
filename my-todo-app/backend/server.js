@@ -9,27 +9,19 @@ const todoRoutes = require("./routes/todos");
 const app = express();
 
 // ✅ Define CORS options first
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "https://todo-frontend-wgje.onrender.com"
-];
-
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://todo-frontend-wgje.onrender.com"
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-// ✅ Apply middleware in order
 app.use(cors(corsOptions));
+
 
 app.use((req, res, next) => {
   console.log("Request Origin:", req.headers.origin);
