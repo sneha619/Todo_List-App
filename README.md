@@ -2,6 +2,7 @@
 
 A feature-rich Todo List application built with React.js that helps users manage personal tasks with ease. It includes secure user authentication using JWT and HTTP-only cookies, ensuring each user’s data remains private and persistent. With drag-and-drop functionality, dark/light mode toggle, and a clean, responsive UI, this app offers both usability and a great user experience.
 
+Deployed link - https://todo-frontend-wgje.onrender.com/
 ---
 
 ## ✨ Features
